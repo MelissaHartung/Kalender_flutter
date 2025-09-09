@@ -1,33 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kalender/functions/headline.dart';
+import 'package:flutter_kalender/functions/calender_table.dart';
 
-class Kalender extends StatelessWidget {
+class Kalender extends StatefulWidget {
   const Kalender({super.key});
+
+  @override
+  State<Kalender> createState() => _KalenderState();
+}
+
+class _KalenderState extends State<Kalender> {
+  DateTime _selectedDate = DateTime.now();
+
+  void _nextMonth() {
+    setState(() {
+      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + 1);
+    });
+  }
+
+  void _previousMonth() {
+    setState(() {
+      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month - 1);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: const Color.fromARGB(255, 127, 167, 128),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Headline(),
-                // Text(
-                //   "KALENDERBLATT",
-                //   style: TextStyle(
-                //     fontSize: 38,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.white,
-                //   ),
-                // ),
-              ],
+            Headline(
+              selectedDate: _selectedDate,
+              onPreviousMonth: _previousMonth,
+              onNextMonth: _nextMonth,
             ),
+            CalenderTable(selectedDate: _selectedDate),
           ],
         ),
       ),
