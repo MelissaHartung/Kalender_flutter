@@ -42,6 +42,23 @@ class _KalenderState extends State<Kalender> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Kalender',
+          ),
+        ],
+
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     setState(() {
+        //       _selectedDate = DateTime.now();
+        //     });
+        //   },
+        // ),
+      ),
     );
   }
 }
