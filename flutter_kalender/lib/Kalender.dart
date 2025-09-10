@@ -42,12 +42,22 @@ class _KalenderState extends State<Kalender> {
           ],
         ),
       ),
+
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.pushNamed(context, '/information_page');
+          }
+        },
         items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           const BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
             label: 'Kalender',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.info_outline_rounded),
+            label: 'Info',
           ),
         ],
 

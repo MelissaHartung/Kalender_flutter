@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Kalender.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'information_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: (Kalender()),
-      routes: {},
+      routes: {'/information_page': (context) => InformationPage()},
     );
   }
 }
