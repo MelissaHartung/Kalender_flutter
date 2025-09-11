@@ -1,45 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kalender/Kalender.dart';
-import 'package:flutter_kalender/functions/information_text.dart';
-// import 'package:intl/intl.dart';
 import 'functions/headline.dart';
 
 class InformationPage extends StatefulWidget {
-  const InformationPage({super.key});
+  final DateTime selectedDate;
+  final String infoText;
+  final VoidCallback previousMonth;
+  final VoidCallback nextMonth;
+
+  const InformationPage({
+    super.key,
+    required this.selectedDate,
+    required this.infoText,
+    required this.previousMonth,
+    required this.nextMonth,
+  });
 
   @override
   State<InformationPage> createState() => _InformationPageState();
 }
 
 class _InformationPageState extends State<InformationPage> {
-  DateTime _selectedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    void _nextMonth() {
-      setState(() {
-        _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + 1);
-      });
-    }
-
-    void _previousMonth() {
-      setState(() {
-        _selectedDate = DateTime(_selectedDate.year, _selectedDate.month - 1);
-      });
-    }
-
     return Scaffold(
-      // appBar: AppBar(title: const Text('Information')),
+      // appBar: AppBar(backgroundColor: const Color.fromARGB(255, 25, 53, 26)),
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 20),
-
             Headline(
-              selectedDate: _selectedDate,
-              onPreviousMonth: _previousMonth,
-              onNextMonth: _nextMonth,
+              selectedDate: widget.selectedDate,
+              onPreviousMonth: widget.previousMonth,
+              onNextMonth: widget.nextMonth,
             ),
-            InformationText(selectedDate: _selectedDate),
+            Text(widget.infoText),
           ],
         ),
       ),

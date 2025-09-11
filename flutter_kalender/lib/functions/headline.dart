@@ -16,15 +16,23 @@ class Headline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formattedMonth = DateFormat.yMMMM('de_DE').format(selectedDate);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        IconButton(icon: Icon(Icons.chevron_left), onPressed: onPreviousMonth),
-        Text(
-          formattedMonth,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(Icons.chevron_left),
+              onPressed: onPreviousMonth,
+            ),
+            Text(
+              formattedMonth,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            IconButton(icon: Icon(Icons.chevron_right), onPressed: onNextMonth),
+          ],
         ),
-        IconButton(icon: Icon(Icons.chevron_right), onPressed: onNextMonth),
       ],
     );
   }

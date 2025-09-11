@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kalender/functions/information_text.dart';
 
 class CalenderTable extends StatelessWidget {
-  final DateTime selectedDate;
+  final DateTime date;
+  final Function(DateTime) setDate;
+  final Function(String) updateText;
 
-  const CalenderTable({super.key, required this.selectedDate});
+  const CalenderTable({
+    super.key,
+    required this.date,
+    required this.setDate,
+    required this.updateText,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final DateTime firstDayOfMonth = DateTime(
-      selectedDate.year,
-      selectedDate.month,
-      1,
-    );
-    final DateTime lastDayOfMonth = DateTime(
-      selectedDate.year,
-      selectedDate.month + 1,
-      0,
-    );
+    final DateTime firstDayOfMonth = DateTime(date.year, date.month, 1);
+    final DateTime lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
     int startWeekday = firstDayOfMonth.weekday;
     int daysInMonth = lastDayOfMonth.day;
     final List<String> weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
@@ -28,13 +28,22 @@ class CalenderTable extends StatelessWidget {
     }
     for (int i = 1; i <= daysInMonth; i++) {
       dayCells.add(
-        Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(6),
+        GestureDetector(
+          onTap: () => {
+            setDate(DateTime(date.year, date.month, i)),
+            updateText(
+              Feiertage.getHoliday(DateTime(date.year, date.month, i)),
+            ),
+            Navigator.pushNamed(context, '/information_page'),
+          },
+          child: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text('$i'),
           ),
-          child: Text('$i'),
         ),
       );
     }

@@ -1,48 +1,96 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
-class InformationText extends StatelessWidget {
-  final DateTime selectedDate;
+// class InformationText extends StatelessWidget {
+//   final DateTime selectedDate;
 
-  const InformationText({super.key, required this.selectedDate});
+//   const InformationText({super.key, required this.selectedDate});
 
-  @override
-  Widget build(BuildContext context) {
-    String formattedDate = DateFormat('d. MMMM', 'de_DE').format(selectedDate);
+//   @override
+//   Widget build(BuildContext context) {
+//     String formattedDate = DateFormat('d. MMMM', 'de_DE').format(selectedDate);
 
-    final feiertageDesJahres = calcFeiertageForYear(selectedDate.year);
-    final feiertageImMonat = <Feiertag>[];
-    for (final Feiertag in feiertageDesJahres) {
-      final teilen = Feiertag.date.split('.');
-      final monatAlsZahl = int.parse(teilen[1]);
-      if (monatAlsZahl == selectedDate.month) {
-        feiertageImMonat.add(Feiertag);
-      }
-    }
+//     final feiertageDesJahres = calcFeiertageForYear(selectedDate.year);
+//     final feiertageImMonat = <Feiertag>[];
+//     for (final Feiertag in feiertageDesJahres) {
+//       final teilen = Feiertag.date.split('.');
+//       final monatAlsZahl = int.parse(teilen[1]);
+//       if (monatAlsZahl == selectedDate.month) {
+//         feiertageImMonat.add(Feiertag);
+//       }
+//     }
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text("Heute ist der $formattedDate"),
-    );
-  }
-}
+//     return Padding(
+//       padding: const EdgeInsets.all(8.0),
+//       child: Text("Heute ist der $formattedDate"),
+//     );
+//   }
+// }
 
 class Feiertag {
   final String date;
   final String name;
-
   Feiertag({required this.date, required this.name});
 }
 
-final List<Feiertag> fixedFeiertage = [
-  Feiertag(date: "01.01.", name: "Neujahr"),
-  Feiertag(date: "06.01.", name: "Heilige Drei Könige"),
-  Feiertag(date: "01.05.", name: "Tag der Arbeit"),
-  Feiertag(date: "03.10.", name: "Tag der Deutschen Einheit"),
-  Feiertag(date: "24.12.", name: "Heiligabend"),
-  Feiertag(date: "25.12.", name: "1. Weihnachtstag"),
-  Feiertag(date: "26.12.", name: "2. Weihnachtstag"),
-];
+class Feiertage {
+  Feiertage();
+
+  static final List<Feiertag> fixedFeiertage = [
+    Feiertag(date: "01.01.", name: "Neujahr"),
+    Feiertag(date: "06.01.", name: "Heilige Drei Könige"),
+    Feiertag(date: "01.05.", name: "Tag der Arbeit"),
+    Feiertag(date: "03.10.", name: "Tag der Deutschen Einheit"),
+    Feiertag(date: "24.12.", name: "Heiligabend"),
+    Feiertag(date: "25.12.", name: "1. Weihnachtstag"),
+    Feiertag(date: "26.12.", name: "2. Weihnachtstag"),
+  ];
+
+  static List<Feiertag> calcFeiertageForYear(int year) {
+    final formatter = DateFormat('dd.MM.');
+
+    final feiertage = [...fixedFeiertage];
+
+    final ostern = getOstersonntag(year);
+
+    final gruenendonnerstag = ostern.subtract(Duration(days: 3));
+    final karfreitag = ostern.subtract(Duration(days: 2));
+    final ostermontag = ostern.add(Duration(days: 1));
+    final christiHimmelfahrt = ostern.add(Duration(days: 39));
+    final pfingstsonntag = ostern.add(Duration(days: 49));
+    final pfingstmontag = ostern.add(Duration(days: 50));
+    final fronleichnam = ostern.add(Duration(days: 60));
+
+    feiertage.addAll([
+      Feiertag(date: formatter.format(ostern), name: "Ostersonntag"),
+      Feiertag(
+        date: formatter.format(gruenendonnerstag),
+        name: "Gründonnerstag",
+      ),
+      Feiertag(date: formatter.format(karfreitag), name: "Karfreitag"),
+      Feiertag(date: formatter.format(ostermontag), name: "Ostermontag"),
+      Feiertag(
+        date: formatter.format(christiHimmelfahrt),
+        name: "Christi Himmelfahrt",
+      ),
+      Feiertag(date: formatter.format(pfingstsonntag), name: "Pfingstsonntag"),
+      Feiertag(date: formatter.format(pfingstmontag), name: "Pfingstmontag"),
+      Feiertag(date: formatter.format(fronleichnam), name: "Fronleichnam"),
+    ]);
+    return feiertage;
+  }
+
+  static String getHoliday(DateTime date) {
+    Feiertag? holiday = calcFeiertageForYear(date.year).firstWhereOrNull(
+      (feiertag) =>
+          feiertag.date ==
+          "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.",
+    );
+
+    if (holiday != null) return holiday.name;
+    return "Kein Feiertag";
+  }
+}
 
 // ✅ Funktion zur Berechnung des Ostersonntags
 DateTime getOstersonntag(int jahr) {
@@ -61,36 +109,4 @@ DateTime getOstersonntag(int jahr) {
   final monat = (h + l - 7 * m + 114) ~/ 31;
   final tag = ((h + l - 7 * m + 114) % 31) + 1;
   return DateTime(jahr, monat, tag);
-}
-
-List<Feiertag> calcFeiertageForYear(int year) {
-  final formatter = DateFormat('dd.MM.');
-
-  final feiertage = [...fixedFeiertage];
-
-  final ostern = getOstersonntag(year);
-
-  final gruenendonnerstag = ostern.subtract(Duration(days: 3));
-  final karfreitag = ostern.subtract(Duration(days: 2));
-  final ostermontag = ostern.add(Duration(days: 1));
-  final christiHimmelfahrt = ostern.add(Duration(days: 39));
-  final pfingstsonntag = ostern.add(Duration(days: 49));
-  final pfingstmontag = ostern.add(Duration(days: 50));
-  final fronleichnam = ostern.add(Duration(days: 60));
-
-  feiertage.addAll([
-    Feiertag(date: formatter.format(ostern), name: "Ostersonntag"),
-    Feiertag(date: formatter.format(gruenendonnerstag), name: "Gründonnerstag"),
-    Feiertag(date: formatter.format(karfreitag), name: "Karfreitag"),
-    Feiertag(date: formatter.format(ostermontag), name: "Ostermontag"),
-    Feiertag(
-      date: formatter.format(christiHimmelfahrt),
-      name: "Christi Himmelfahrt",
-    ),
-    Feiertag(date: formatter.format(pfingstsonntag), name: "Pfingstsonntag"),
-    Feiertag(date: formatter.format(pfingstmontag), name: "Pfingstmontag"),
-    Feiertag(date: formatter.format(fronleichnam), name: "Fronleichnam"),
-  ]);
-
-  return feiertage;
 }

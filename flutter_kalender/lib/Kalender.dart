@@ -3,27 +3,25 @@ import 'package:flutter_kalender/functions/headline.dart';
 import 'package:flutter_kalender/functions/calender_table.dart';
 
 class Kalender extends StatefulWidget {
-  const Kalender({super.key});
+  final DateTime selectedDate;
+  final VoidCallback previousMonth;
+  final VoidCallback nextMonth;
+  final Function(DateTime) setDate;
+  final Function(String) updateText;
+  const Kalender({
+    super.key,
+    required this.selectedDate,
+    required this.previousMonth,
+    required this.nextMonth,
+    required this.setDate,
+    required this.updateText,
+  });
 
   @override
   State<Kalender> createState() => _KalenderState();
 }
 
 class _KalenderState extends State<Kalender> {
-  DateTime _selectedDate = DateTime.now();
-
-  void _nextMonth() {
-    setState(() {
-      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + 1);
-    });
-  }
-
-  void _previousMonth() {
-    setState(() {
-      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month - 1);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,13 +30,16 @@ class _KalenderState extends State<Kalender> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
             Headline(
-              selectedDate: _selectedDate,
-              onPreviousMonth: _previousMonth,
-              onNextMonth: _nextMonth,
+              selectedDate: widget.selectedDate,
+              onPreviousMonth: widget.previousMonth,
+              onNextMonth: widget.nextMonth,
             ),
-            CalenderTable(selectedDate: _selectedDate),
+            CalenderTable(
+              date: widget.selectedDate,
+              setDate: widget.setDate,
+              updateText: widget.updateText,
+            ),
           ],
         ),
       ),
@@ -64,7 +65,7 @@ class _KalenderState extends State<Kalender> {
         // floatingActionButton: FloatingActionButton(
         //   onPressed: () {
         //     setState(() {
-        //       _selectedDate = DateTime.now();
+        //       widget.selectedDate = DateTime.now();
         //     });
         //   },
         // ),
