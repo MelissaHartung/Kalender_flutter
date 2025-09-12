@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kalender/functions/information_text.dart';
+import 'package:flutter_kalender/functions/holidays.dart';
 
 class CalenderTable extends StatelessWidget {
   final DateTime date;

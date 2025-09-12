@@ -1,6 +1,12 @@
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
+int berechneTagdesJahres(DateTime datum) {
+  DateTime startJahr = DateTime(datum.year, 1, 1);
+  return datum.difference(startJahr).inDays + 1;
+}
+
+
 // class InformationText extends StatelessWidget {
 //   final DateTime selectedDate;
 

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'functions/headline.dart';
 import 'functions/history_dates.dart';
+import 'functions/infotext.dart';
+import 'package:intl/intl.dart';
+
 
 class InformationPage extends StatefulWidget {
   final DateTime selectedDate;
@@ -21,8 +24,12 @@ class InformationPage extends StatefulWidget {
 }
 
 class _InformationPageState extends State<InformationPage> {
+  
   @override
   Widget build(BuildContext context) {
+    final String formatiertesDatum = DateFormat('dd.MM.yyyy').format(widget.selectedDate);
+    final int tagImJahr = berechneTagdesJahres(widget.selectedDate);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(143, 149, 141, 179),
       // appBar: AppBar(backgroundColor: const Color.fromARGB(255, 25, 53, 26)),
@@ -81,6 +88,7 @@ class _InformationPageState extends State<InformationPage> {
               },
               ),
             ),
+            Text('Heute ist der $formatiertesDatum und der $tagImJahr. Tag im Jahr ${widget.selectedDate.year}.')
           ],
         ),
       ),
