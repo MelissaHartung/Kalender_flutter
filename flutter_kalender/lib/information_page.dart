@@ -42,34 +42,43 @@ class _InformationPageState extends State<InformationPage> {
             ),
               child: Text(widget.infoText, style: const TextStyle(color: Colors.white, fontSize: 15),  textAlign: TextAlign.center,
               )),
-            FutureBuilder(future:ladeHistorischeereignisse(widget.selectedDate.month, widget.selectedDate.day), builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
-              if (snapshot.hasError) {
-                return Text('Fehler: ${snapshot.error}');
-              }
-              if (snapshot.hasData) {
-                final daten= snapshot.data!;
-               final Ereignisse = daten['events'];
-               final jahr= Ereignisse[0]['year'];
-               final ergebniss= Ereignisse[0]['text'];
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 3),
-                    borderRadius: BorderRadius.circular(100)
+            Expanded(
+              child: FutureBuilder(future:ladeHistorischeereignisse(widget.selectedDate.month, widget.selectedDate.day), builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  return Text('Fehler: ${snapshot.error}');
+                }
+                if (snapshot.hasData) {
+                  final daten= snapshot.data!;
+                 final ereignisse = daten['events'];
+                return ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                final ereignis = ereignisse[index];
+                final jahr = ereignis['year'];
+                final ergebniss = ereignis['text'];
+                return Padding  (
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(174, 0, 0, 0),
+                      border: Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 3),
+                      borderRadius: BorderRadius.circular(100)
+                    ),
+                    child: Text('$jahr: $ergebniss',
+                    style: const TextStyle(color: Colors.white, fontSize: 15),  textAlign: TextAlign.center,
+                        ),
                   ),
-                  child: Text('$jahr: $ergebniss',
-                  style: const TextStyle(color: Colors.white, fontSize: 15),  textAlign: TextAlign.center,
-                      ),
-                ),
-              );
-              }
-              return Container();
-            },
+                  );
+                  },
+                );
+                }
+                return Container();
+              },
+              ),
             ),
           ],
         ),
