@@ -31,21 +31,22 @@ class _InformationPageState extends State<InformationPage> {
           children: [
             Headline(
               selectedDate: widget.selectedDate,
-              onPreviousMonth: widget.previousMonth,
-              onNextMonth: widget.nextMonth,
             ),
+            SizedBox(height: 20,),
             Container(
               padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
+              color: const Color.fromARGB(172, 22, 21, 21),
               border: Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 3),
               borderRadius: BorderRadius.circular(100)
             ),
               child: Text(widget.infoText, style: const TextStyle(color: Colors.white, fontSize: 15),  textAlign: TextAlign.center,
               )),
+              SizedBox(height: 20,),
             Expanded(
               child: FutureBuilder(future:ladeHistorischeereignisse(widget.selectedDate.month, widget.selectedDate.day), builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
                   return Text('Fehler: ${snapshot.error}');
