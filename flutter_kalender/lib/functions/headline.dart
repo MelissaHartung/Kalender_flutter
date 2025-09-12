@@ -23,14 +23,14 @@ class Headline extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: Icon(Icons.chevron_left),
+              icon: Icon(Icons.chevron_left, color: Colors.white, size: 40,),
               onPressed: onPreviousMonth,
             ),
             Text(
               formattedMonth,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
             ),
-            IconButton(icon: Icon(Icons.chevron_right), onPressed: onNextMonth),
+            IconButton(icon: Icon(Icons.chevron_right, color: Colors.white,size: 40,), onPressed: onNextMonth),
           ],
         ),
       ],

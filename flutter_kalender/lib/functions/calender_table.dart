@@ -36,23 +36,32 @@ class CalenderTable extends StatelessWidget {
             ),
             Navigator.pushNamed(context, '/information_page'),
           },
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(6),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 50,
+              width: 100,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 193, 190, 207),
+                border: Border.all(color: const Color.fromARGB(176, 125, 113, 168), width: 3),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text('$i',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    
+                  ), 
             ),
-            child: Text('$i'),
           ),
         ),
-      );
+      ));
     }
     int rowCount = (dayCells.length / 7).ceil();
     final List<TableRow> rows = [];
 
     rows.add(
       TableRow(
-        children: weekdays.map((day) => Center(child: Text(day))).toList(),
+        children: weekdays.map((day) => Center(child: Text(day, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),))).toList(),
       ),
     );
     for (int i = 0; i < rowCount; i++) {
@@ -75,7 +84,8 @@ class CalenderTable extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Table(
-        border: TableBorder.all(color: Colors.grey),
+        // border: TableBorder.all(color: const Color.fromARGB(255, 0, 0, 0),
+        // width: 1, borderRadius: BorderRadius.all(Radius.circular(10))),
         children: rows,
       ),
     );

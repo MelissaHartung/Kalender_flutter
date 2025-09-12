@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'functions/headline.dart';
+import 'functions/history_dates.dart';
 
 class InformationPage extends StatefulWidget {
   final DateTime selectedDate;
@@ -23,6 +24,7 @@ class _InformationPageState extends State<InformationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(143, 149, 141, 179),
       // appBar: AppBar(backgroundColor: const Color.fromARGB(255, 25, 53, 26)),
       body: SafeArea(
         child: Column(
@@ -32,7 +34,43 @@ class _InformationPageState extends State<InformationPage> {
               onPreviousMonth: widget.previousMonth,
               onNextMonth: widget.nextMonth,
             ),
-            Text(widget.infoText),
+            Container(
+              padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 3),
+              borderRadius: BorderRadius.circular(100)
+            ),
+              child: Text(widget.infoText, style: const TextStyle(color: Colors.white, fontSize: 15),  textAlign: TextAlign.center,
+              )),
+            FutureBuilder(future:ladeHistorischeereignisse(widget.selectedDate.month, widget.selectedDate.day), builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              if (snapshot.hasError) {
+                return Text('Fehler: ${snapshot.error}');
+              }
+              if (snapshot.hasData) {
+                final daten= snapshot.data!;
+               final Ereignisse = daten['events'];
+               final jahr= Ereignisse[0]['year'];
+               final ergebniss= Ereignisse[0]['text'];
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 3),
+                    borderRadius: BorderRadius.circular(100)
+                  ),
+                  child: Text('$jahr: $ergebniss',
+                  style: const TextStyle(color: Colors.white, fontSize: 15),  textAlign: TextAlign.center,
+                      ),
+                ),
+              );
+              }
+              return Container();
+            },
+            ),
           ],
         ),
       ),
