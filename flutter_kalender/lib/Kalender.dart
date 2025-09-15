@@ -26,6 +26,7 @@ class _KalenderState extends State<Kalender> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(143, 149, 141, 179),
+      appBar: AppBar(backgroundColor: const Color.fromARGB(255, 63, 59, 78)),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,38 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
-int berechneTagdesJahres(DateTime datum) {
-  DateTime startJahr = DateTime(datum.year, 1, 1);
-  return datum.difference(startJahr).inDays + 1;
-}
-
-
-// class InformationText extends StatelessWidget {
-//   final DateTime selectedDate;
-
-//   const InformationText({super.key, required this.selectedDate});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     String formattedDate = DateFormat('d. MMMM', 'de_DE').format(selectedDate);
-
-//     final feiertageDesJahres = calcFeiertageForYear(selectedDate.year);
-//     final feiertageImMonat = <Feiertag>[];
-//     for (final Feiertag in feiertageDesJahres) {
-//       final teilen = Feiertag.date.split('.');
-//       final monatAlsZahl = int.parse(teilen[1]);
-//       if (monatAlsZahl == selectedDate.month) {
-//         feiertageImMonat.add(Feiertag);
-//       }
-//     }
-
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Text("Heute ist der $formattedDate"),
-//     );
-//   }
-// }
-
 class Feiertag {
   final String date;
   final String name;
