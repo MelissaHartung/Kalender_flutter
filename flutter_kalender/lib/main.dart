@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime _selectedDate = DateTime.now();
-  String infoText = "hi its you";
+  String infoText = "";
 
   void _nextMonth() {
     setState(() {

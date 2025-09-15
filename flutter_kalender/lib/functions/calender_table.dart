@@ -29,12 +29,11 @@ class CalenderTable extends StatelessWidget {
     for (int i = 1; i <= daysInMonth; i++) {
       dayCells.add(
         GestureDetector(
-          onTap: () => {
-            setDate(DateTime(date.year, date.month, i)),
-            updateText(
-              Feiertage.getHoliday(DateTime(date.year, date.month, i)),
-            ),
-            Navigator.pushNamed(context, '/information_page'),
+          onTap: () {
+            final selectedDay = DateTime(date.year, date.month, i);
+            setDate(selectedDay);
+            updateText(Feiertage.getHoliday(selectedDay));
+            Navigator.pushNamed(context, '/information_page');
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -43,25 +42,41 @@ class CalenderTable extends StatelessWidget {
               width: 100,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 193, 190, 207),
-                border: Border.all(color: const Color.fromARGB(176, 125, 113, 168), width: 3),
+                border: Border.all(
+                  color: const Color.fromARGB(176, 125, 113, 168),
+                  width: 3,
+                ),
                 borderRadius: BorderRadius.circular(100),
               ),
-              child: Text('$i',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    
-                  ), 
+              child: Text(
+                '$i',
+                textAlign: TextAlign.center,
+                style: TextStyle(),
+              ),
             ),
           ),
         ),
-      ));
+      );
     }
     int rowCount = (dayCells.length / 7).ceil();
     final List<TableRow> rows = [];
 
     rows.add(
       TableRow(
-        children: weekdays.map((day) => Center(child: Text(day, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),))).toList(),
+        children: weekdays
+            .map(
+              (day) => Center(
+                child: Text(
+                  day,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
     for (int i = 0; i < rowCount; i++) {

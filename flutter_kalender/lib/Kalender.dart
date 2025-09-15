@@ -22,11 +22,29 @@ class Kalender extends StatefulWidget {
 }
 
 class _KalenderState extends State<Kalender> {
+  var isDarkmode = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(143, 149, 141, 179),
-      appBar: AppBar(backgroundColor: const Color.fromARGB(255, 63, 59, 78)),
+      backgroundColor: isDarkmode
+          ? Colors.black
+          : Color.fromARGB(143, 149, 141, 179),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 63, 59, 78),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                isDarkmode = !isDarkmode;
+              });
+            },
+            icon: isDarkmode
+                ? Icon(Icons.light_mode_rounded)
+                : Icon(Icons.dark_mode_rounded),
+            color: Colors.white,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +64,10 @@ class _KalenderState extends State<Kalender> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
         currentIndex: 0,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.white,
         onTap: (index) {
           if (index == 1) {
             Navigator.pushNamed(context, '/information_page');
