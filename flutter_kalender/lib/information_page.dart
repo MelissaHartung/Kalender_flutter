@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kalender/notizen.dart';
 import 'functions/headline.dart';
 import 'functions/history_dates.dart';
 import 'functions/infotext.dart';
@@ -24,6 +25,8 @@ class InformationPage extends StatefulWidget {
 
 class _InformationPageState extends State<InformationPage> {
   bool isDarkMode = false;
+  bool isEditing = false;
+  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final String formatiertesDatum = DateFormat(
@@ -61,8 +64,22 @@ class _InformationPageState extends State<InformationPage> {
       body: SafeArea(
         child: Column(
           children: [
-            Headline(selectedDate: widget.selectedDate),
+            Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Headline(selectedDate: widget.selectedDate),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0, top: 10.0),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: 20),
+
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(

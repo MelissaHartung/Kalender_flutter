@@ -15,24 +15,23 @@ class CalenderTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime firstDayOfMonth = DateTime(date.year, date.month, 1);
-    final DateTime lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
-    int startWeekday = firstDayOfMonth.weekday;
-    int daysInMonth = lastDayOfMonth.day;
     final List<String> weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
 
-    List<Widget> dayCells = [];
+    List<Widget> weekCells = [];
 
-    for (int i = 1; i < startWeekday; i++) {
-      dayCells.add(Container());
-    }
-    for (int i = 1; i <= daysInMonth; i++) {
-      dayCells.add(
+    for (int i = 0; i < 7; i++) {
+      DateTime day = startOfWeek.add(Duration(days: i));
+      final heute = DateTime.now();
+      final istHeute =
+          day.day == heute.day &&
+          date.month == heute.month &&
+          date.year == heute.year;
+      weekCells.add(
         GestureDetector(
           onTap: () {
-            final selectedDay = DateTime(date.year, date.month, i);
-            setDate(selectedDay);
-            updateText(Feiertage.getHoliday(selectedDay));
+            setDate(day);
+            updateText(Feiertage.getHoliday(day));
             Navigator.pushNamed(context, '/information_page');
           },
           child: Padding(
@@ -40,8 +39,11 @@ class CalenderTable extends StatelessWidget {
             child: Container(
               height: 50,
               width: 100,
+
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 193, 190, 207),
+                color: istHeute
+                    ? const Color.fromARGB(255, 51, 128, 179)
+                    : const Color.fromARGB(255, 193, 190, 207),
                 border: Border.all(
                   color: const Color.fromARGB(176, 125, 113, 168),
                   width: 3,
@@ -58,7 +60,6 @@ class CalenderTable extends StatelessWidget {
         ),
       );
     }
-    int rowCount = (dayCells.length / 7).ceil();
     final List<TableRow> rows = [];
 
     rows.add(
@@ -79,30 +80,11 @@ class CalenderTable extends StatelessWidget {
             .toList(),
       ),
     );
-    for (int i = 0; i < rowCount; i++) {
-      int startindex = i * 7;
-      int endIndex = startindex + 7;
-      if (startindex >= dayCells.length) {
-        break;
-      }
-
-      List<Widget> weekCells = dayCells.sublist(
-        startindex,
-        endIndex > dayCells.length ? dayCells.length : endIndex,
-      );
-      while (weekCells.length < 7) {
-        weekCells.add(Container());
-      }
-      rows.add(TableRow(children: weekCells));
-    }
+    rows.add(TableRow(children: weekCells));
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Table(
-        // border: TableBorder.all(color: const Color.fromARGB(255, 0, 0, 0),
-        // width: 1, borderRadius: BorderRadius.all(Radius.circular(10))),
-        children: rows,
-      ),
+      child: Table(children: rows),
     );
   }
 }

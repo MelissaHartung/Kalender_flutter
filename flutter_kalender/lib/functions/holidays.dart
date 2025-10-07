@@ -4,13 +4,11 @@ import 'package:collection/collection.dart';
 class Feiertag {
   final String date;
   final String name;
-  Feiertag({required this.date, required this.name});
+  const Feiertag({required this.date, required this.name});
 }
 
 class Feiertage {
-  Feiertage();
-
-  static final List<Feiertag> fixedFeiertage = [
+  static const List<Feiertag> fixedFeiertage = [
     Feiertag(date: "01.01.", name: "Neujahr"),
     Feiertag(date: "06.01.", name: "Heilige Drei Könige"),
     Feiertag(date: "01.05.", name: "Tag der Arbeit"),

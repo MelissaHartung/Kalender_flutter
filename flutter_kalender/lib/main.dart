@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'Kalender.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'information_page.dart';
+import 'notizen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
           previousMonth: _previousMonth,
           nextMonth: _nextMonth,
         ),
+        '/notizen': (context) => const Notizen(),
       },
     );
   }
