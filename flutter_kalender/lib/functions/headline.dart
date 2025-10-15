@@ -6,7 +6,6 @@ class Headline extends StatelessWidget {
   final VoidCallback? onPreviousMonth;
   final VoidCallback? onNextMonth;
 
-
   const Headline({
     super.key,
     required this.selectedDate,
@@ -16,8 +15,9 @@ class Headline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatierer = onNextMonth != null ? DateFormat.yMMMM('de_DE') : DateFormat.yMMMMd('de_DE');
-    final String angezeigterText = formatierer.format(selectedDate);
+    final String angezeigterText = DateFormat.yMMMMd(
+      'de_DE',
+    ).format(DateTime.now());
     return Column(
       children: [
         SizedBox(height: 20),
@@ -25,16 +25,23 @@ class Headline extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (onPreviousMonth != null)
-            IconButton(
-              icon: Icon(Icons.chevron_left, color: Colors.white, size: 40,),
-              onPressed: onPreviousMonth,
-            ),
+              IconButton(
+                icon: Icon(Icons.chevron_left, color: Colors.white, size: 40),
+                onPressed: onPreviousMonth,
+              ),
             Text(
               angezeigterText,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             if (onNextMonth != null)
-            IconButton(icon: Icon(Icons.chevron_right, color: Colors.white,size: 40,), onPressed: onNextMonth),
+              IconButton(
+                icon: Icon(Icons.chevron_right, color: Colors.white, size: 40),
+                onPressed: onNextMonth,
+              ),
           ],
         ),
       ],

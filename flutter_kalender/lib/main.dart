@@ -21,15 +21,15 @@ class _MyAppState extends State<MyApp> {
   DateTime _selectedDate = DateTime.now();
   String infoText = "";
 
-  void _nextMonth() {
+  void _nextWeek() {
     setState(() {
-      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + 1);
+      _selectedDate = _selectedDate.add(const Duration(days: 7));
     });
   }
 
-  void _previousMonth() {
+  void _previousWeek() {
     setState(() {
-      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month - 1);
+      _selectedDate = _selectedDate.subtract(const Duration(days: 7));
     });
   }
 
@@ -52,8 +52,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: (Kalender(
         selectedDate: _selectedDate,
-        previousMonth: _previousMonth,
-        nextMonth: _nextMonth,
+        previousMonth: _previousWeek,
+        nextMonth: _nextWeek,
         setDate: _setDate,
         updateText: _updateText,
       )),
@@ -61,8 +61,8 @@ class _MyAppState extends State<MyApp> {
         '/information_page': (context) => InformationPage(
           selectedDate: _selectedDate,
           infoText: infoText,
-          previousMonth: _previousMonth,
-          nextMonth: _nextMonth,
+          previousMonth: _previousWeek,
+          nextMonth: _nextWeek,
         ),
         '/notizen': (context) => const Notizen(),
       },

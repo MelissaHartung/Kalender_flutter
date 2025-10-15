@@ -187,8 +187,10 @@ class _InformationPageState extends State<InformationPage> {
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.white,
         onTap: (index) {
-          if (index == 1) {
-            Navigator.pushNamed(context, '/information_page');
+          if (index == 0) {
+            Navigator.pop(
+              context,
+            ); // Geht eine Seite zurück (zur Kalender-Seite)
           }
         },
         items: [

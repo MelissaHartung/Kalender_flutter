@@ -26,11 +26,9 @@ class _KalenderState extends State<Kalender> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: isDarkmode
-          ? Colors.black
-          : Color.fromARGB(143, 149, 141, 179),
+      backgroundColor: isDarkmode ? Colors.black : Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 63, 59, 78),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         actions: [
           IconButton(
             onPressed: () {
@@ -58,6 +56,24 @@ class _KalenderState extends State<Kalender> {
               date: widget.selectedDate,
               setDate: widget.setDate,
               updateText: widget.updateText,
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(
+                    255,
+                    31,
+                    30,
+                    30,
+                  ), // Farbe hierher verschoben
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                width: double
+                    .infinity, // Sorgt dafür, dass der Container die volle Breite einnimmt
+                child: ListView(
+                  // Hier kommen später deine To-Dos rein
+                ),
+              ),
             ),
           ],
         ),

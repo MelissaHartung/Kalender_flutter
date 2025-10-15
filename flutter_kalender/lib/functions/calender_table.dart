@@ -25,8 +25,8 @@ class CalenderTable extends StatelessWidget {
       final heute = DateTime.now();
       final istHeute =
           day.day == heute.day &&
-          date.month == heute.month &&
-          date.year == heute.year;
+          day.month == heute.month &&
+          day.year == heute.year;
       weekCells.add(
         GestureDetector(
           onTap: () {
@@ -42,18 +42,15 @@ class CalenderTable extends StatelessWidget {
 
               decoration: BoxDecoration(
                 color: istHeute
-                    ? const Color.fromARGB(255, 51, 128, 179)
-                    : const Color.fromARGB(255, 193, 190, 207),
-                border: Border.all(
-                  color: const Color.fromARGB(176, 125, 113, 168),
-                  width: 3,
-                ),
+                    ? const Color.fromARGB(255, 51, 179, 119)
+                    : const Color.fromARGB(255, 0, 0, 0),
+
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Text(
-                '$i',
+                '${day.day}',
                 textAlign: TextAlign.center,
-                style: TextStyle(),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
           ),
