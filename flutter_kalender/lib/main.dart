@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kalender/functions/add_todo_page.dart';
 import 'Kalender.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'information_page.dart';
-import 'notizen.dart';
+import 'package:flutter_kalender/functions/to_do.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,13 +59,14 @@ class _MyAppState extends State<MyApp> {
         updateText: _updateText,
       )),
       routes: {
+        '/add_todo_page': (context) => AddTodoPage(
+        ),
         '/information_page': (context) => InformationPage(
           selectedDate: _selectedDate,
           infoText: infoText,
           previousMonth: _previousWeek,
           nextMonth: _nextWeek,
         ),
-        '/notizen': (context) => const Notizen(),
       },
     );
   }

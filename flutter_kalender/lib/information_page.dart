@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kalender/notizen.dart';
 import 'functions/headline.dart';
 import 'functions/history_dates.dart';
 import 'functions/infotext.dart';

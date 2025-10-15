@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kalender/functions/headline.dart';
 import 'package:flutter_kalender/functions/calender_table.dart';
+import 'package:flutter_kalender/functions/to_do.dart';
 
 class Kalender extends StatefulWidget {
   final DateTime selectedDate;
@@ -23,6 +24,11 @@ class Kalender extends StatefulWidget {
 
 class _KalenderState extends State<Kalender> {
   var isDarkmode = false;
+List <ToDo> todos = [
+  ToDo(title: 'Beispiel To-Do 1'),
+  ToDo(title: 'Beispiel To-Do 2', isDone: true),
+  ToDo(title: 'Beispiel To-Do 3'),
+];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +77,31 @@ class _KalenderState extends State<Kalender> {
                 width: double
                     .infinity, // Sorgt dafür, dass der Container die volle Breite einnimmt
                 child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                     
+                    ),
+                    ...todos.map((todo) => ListTile(
+                          title: Text(
+                            todo.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              decoration: todo.isDone
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                          trailing: Checkbox(
+                            value: todo.isDone,
+                            onChanged: (value) {
+                              setState(() {
+                                todo.toggleDone();
+                              });
+                            },
+                          ),
+                        )),
+                  ],
                   // Hier kommen später deine To-Dos rein
                 ),
               ),
@@ -100,14 +131,21 @@ class _KalenderState extends State<Kalender> {
           ),
         ],
 
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     setState(() {
-        //       widget.selectedDate = DateTime.now();
-        //     });
-        //   },
-        // ),
       ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color.fromARGB(255, 81, 168, 154),
+          child: Icon(Icons.add, color: Colors.white),
+          onPressed: () {
+            Navigator.pushNamed(context, '/add_todo_page').then((newTodo) {
+              if (newTodo != null && newTodo is ToDo) {
+                setState(() {
+                  todos.add(newTodo);
+                });
+              }
+            }
+            );
+          },
+        ),
     );
   }
 }
