@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddTodoPage extends StatefulWidget {
-  
   const AddTodoPage({super.key});
 
   @override
@@ -11,6 +10,7 @@ class AddTodoPage extends StatefulWidget {
 }
 
 class _AddTodoPageState extends State<AddTodoPage> {
+  final _todoTitleController = TextEditingController();
   final List<Duration> durations = [
     const Duration(minutes: 5),
     const Duration(minutes: 15),
@@ -19,14 +19,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
     const Duration(hours: 1),
     const Duration(hours: 1, minutes: 30),
   ];
-  bool get _isCustomDurationSelected{
-    if (_selectedDuration==null){
+  bool get _isCustomDurationSelected {
+    if (_selectedDuration == null) {
       return false;
     }
     return !durations.contains(_selectedDuration);
   }
-   
-   Future<void> _showCustomDurationDialog() async {
+
+  Future<void> _showCustomDurationDialog(StateSetter sheetSetState) async {
     final customDurationController = TextEditingController();
     return showDialog<void>(
       context: context,
@@ -36,7 +36,9 @@ class _AddTodoPageState extends State<AddTodoPage> {
           content: TextField(
             controller: customDurationController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(hintText: 'z.B. 20 für 20 Minuten'),
+            decoration: const InputDecoration(
+              hintText: 'z.B. 20 für 20 Minuten',
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -48,9 +50,11 @@ class _AddTodoPageState extends State<AddTodoPage> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                final int? minutes = int.tryParse(customDurationController.text);
+                final int? minutes = int.tryParse(
+                  customDurationController.text,
+                );
                 if (minutes != null && minutes > 0) {
-                  setState(() {
+                  sheetSetState(() {
                     _selectedDuration = Duration(minutes: minutes);
                   });
                 }
@@ -62,79 +66,164 @@ class _AddTodoPageState extends State<AddTodoPage> {
       },
     );
   }
-  
+
   Duration? _selectedDuration;
-  DateTime?_selectedTime;
+  DateTime? _selectedTime;
+
+  @override
+  void dispose() {
+    // Diese Methode wird aufgerufen, wenn die Seite zerstört wird.
+    // Räume hier immer deine Controller auf!
+    _todoTitleController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Add To-Do'),
         backgroundColor: Color.fromARGB(255, 0, 0, 0),
       ),
-      body: Padding(padding:  EdgeInsets.all(16.0),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
 
-      child: Column(
-        children: [
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'To-Do Title',
+        child: Column(
+          children: [
+            TextField(
+              controller: _todoTitleController,
+              decoration: InputDecoration(labelText: 'To-Do Title'),
             ),
-          ),
-          SizedBox(height: 20),
-          TextButton.icon(icon:const Icon(Icons.timer_outlined,size: 25,), label: Text(_selectedTime==null?'uhrzeit auswählen': DateFormat('HH:mm').format(_selectedTime!)), onPressed: ()  { showModalBottomSheet(context: context, builder: (BuildContext context){
-            return SizedBox(height: 450,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 40.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: CupertinoDatePicker(initialDateTime: DateTime.now(), mode: CupertinoDatePickerMode.time, use24hFormat: true, onDateTimeChanged: (DateTime newTime){
-                      setState(() {
-                        _selectedTime = newTime;
-                      });
-                    }),
-                  ),
-              const Divider(thickness: 1),const SizedBox(height: 10,),
-                  const Text('Dauer auswählen', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                  const SizedBox(height: 10,),
-                  Wrap(spacing:8.0,runSpacing: 4.0,children: [
-                    ...durations.map((duration) {
-                      final isSelected = _selectedDuration == duration;
-                      return
-                    ActionChip(label: Text('${duration.inMinutes} Min'), onPressed: (){
-                      setState(() {
-                        _selectedDuration = duration;
-                      });
-                      },
-                    
-                    backgroundColor: isSelected ? Colors.blue : Colors.grey[300],
-                    labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
-                    );
-                        }).toList(),
-                        OutlinedButton(onPressed: (){_showCustomDurationDialog();},style: OutlinedButton.styleFrom(foregroundColor: _isCustomDurationSelected ? Colors.blue : const Color.fromARGB(255, 0, 0, 0), side: BorderSide(color: _isCustomDurationSelected ? Colors.blue : const Color.fromARGB(255, 0, 0, 0), width: 2.0)), child: const Text('Benutzerdefiniert'))
-                  ]
-                )
-                ],
-                
+            SizedBox(height: 20),
+            TextButton.icon(
+              icon: const Icon(Icons.timer_outlined, size: 25),
+              label: Text(
+                _selectedTime == null
+                    ? 'uhrzeit auswählen'
+                    : DateFormat('HH:mm').format(_selectedTime!),
               ),
-            ),
-            );
-          }
-          );
-          },),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return StatefulBuilder(
+                      builder: (BuildContext context, StateSetter sheetSetState) {
+                        return SizedBox(
+                          height: 450,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 40.0),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: CupertinoDatePicker(
+                                    initialDateTime: DateTime.now(),
+                                    mode: CupertinoDatePickerMode.time,
+                                    use24hFormat: true,
+                                    onDateTimeChanged: (DateTime newTime) {
+                                      setState(() {
+                                        // Das normale setState ist hier OK, da die Uhrzeit auch außerhalb sichtbar ist
+                                        _selectedTime = newTime;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const Divider(thickness: 1),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  'Dauer auswählen',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Wrap(
+                                  spacing: 8.0,
+                                  runSpacing: 4.0,
+                                  children: [
+                                    ...durations.map((duration) {
+                                      final isSelected =
+                                          _selectedDuration == duration;
+                                      return ActionChip(
+                                        label: Text(
+                                          '${duration.inMinutes} Min',
+                                        ),
+                                        onPressed: () {
+                                          sheetSetState(() {
+                                            // Hier das sheetSetState benutzen
+                                            _selectedDuration = duration;
+                                          });
+                                        },
 
-          ElevatedButton(
-            onPressed: () {
-              // Logic to add the to-do item
-              Navigator.pop(context);
-            },
-            child: Text('Add To-Do'),
-          ),
-        ],
+                                        backgroundColor: isSelected
+                                            ? Colors.blue
+                                            : Colors.grey[300],
+                                        labelStyle: TextStyle(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      );
+                                    }).toList(),
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        _showCustomDurationDialog(
+                                          sheetSetState,
+                                        );
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor:
+                                            _isCustomDurationSelected
+                                            ? Colors.blue
+                                            : const Color.fromARGB(
+                                                255,
+                                                0,
+                                                0,
+                                                0,
+                                              ),
+                                        side: BorderSide(
+                                          color: _isCustomDurationSelected
+                                              ? Colors.blue
+                                              : const Color.fromARGB(
+                                                  255,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                ),
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      child: _isCustomDurationSelected
+                                          // Hier greifen wir auf die Minuten der ausgewählten Dauer zu
+                                          ? Text(
+                                              '${_selectedDuration!.inMinutes} Min',
+                                            )
+                                          : const Text('Benutzerdefiniert'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+
+            ElevatedButton(
+              onPressed: () {
+                // Logic to add the to-do item
+                Navigator.pop(context);
+              },
+              child: Text('Add To-Do'),
+            ),
+          ],
+        ),
       ),
-    )
     );
   }
 }
