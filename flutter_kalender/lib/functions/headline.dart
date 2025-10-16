@@ -5,12 +5,14 @@ class Headline extends StatelessWidget {
   final DateTime selectedDate;
   final VoidCallback? onPreviousMonth;
   final VoidCallback? onNextMonth;
+  final Function(DateTime)? setDate;
 
   const Headline({
     super.key,
     required this.selectedDate,
     this.onPreviousMonth,
     this.onNextMonth,
+    this.setDate,
   });
 
   @override
@@ -41,23 +43,14 @@ class Headline extends StatelessWidget {
                         firstDate: DateTime(selectedDate.year - 5),
                         lastDate: DateTime(selectedDate.year + 5),
                         onDateChanged: (newDate) {
-                          void Function(DateTime)? setDate;
                           if (setDate != null) {
-                            setDate(newDate);
+                            setDate!(newDate);
                           }
                           Navigator.pop(context);
                         },
                       ),
                     );
                   },
-                );
-                Text(
-                  'Heute ist der $angezeigterText',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
                 );
               },
               child: Text(
