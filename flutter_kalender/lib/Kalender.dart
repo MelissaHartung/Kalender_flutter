@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kalender/functions/add_todo_page.dart';
 import 'package:flutter_kalender/functions/headline.dart';
 import 'package:flutter_kalender/functions/calender_table.dart';
+import 'package:flutter_kalender/functions/holidays.dart';
 import 'package:flutter_kalender/functions/to_do.dart';
 import 'package:intl/intl.dart';
 
@@ -40,19 +41,11 @@ class _KalenderState extends State<Kalender> {
   }
 
   Map<DateTime, List<ToDo>> allTodos = {};
-
-  // Hilfsfunktion, um die Uhrzeit von einem DateTime zu entfernen
-  DateTime _normalizeDate(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final dayKey = _normalizeDate(widget.selectedDate);
-    final List<ToDo> todosForSelectedDay = allTodos[dayKey] ?? [];
-
-    // Sortiere die Liste für den ausgewählten Tag
-    todosForSelectedDay.sort((a, b) {
+    // Sortiere die 'todos'-Liste
+    List<ToDo> todos = allTodos.values.expand((list) => list).toList();
+    todos.sort((a, b) {
       // Fall 1: a hat keine Zeit, b aber schon -> b kommt zuerst
       if (a.starttime == null && b.starttime != null) {
         return 1; // 1 bedeutet "b kommt vor a"
@@ -68,6 +61,9 @@ class _KalenderState extends State<Kalender> {
       // Fall 4: Beide haben keine Zeit -> Ihre Reihenfolge ist egal
       return 0;
     });
+
+    final String holidayName = Feiertage.getHoliday(widget.selectedDate);
+    final bool isHoliday = holidayName != "Kein Feiertag";
     return Scaffold(
       backgroundColor: isDarkmode ? Colors.black : Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
@@ -114,9 +110,47 @@ class _KalenderState extends State<Kalender> {
                 width: double
                     .infinity, // Sorgt dafür, dass der Container die volle Breite einnimmt
                 child: ListView.builder(
-                  itemCount: todosForSelectedDay.length,
+                  itemCount: todos.length + (isHoliday ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final todo = todosForSelectedDay[index];
+                    if (isHoliday && index == 0) {
+                      // Dies ist das Widget für den Feiertag
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 4.0,
+                        ),
+                        child: Card(
+                          color: const Color.fromARGB(
+                            255,
+                            192,
+                            80,
+                            145,
+                          ), // Eine hervorhebende Farbe
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              8.0,
+                            ), // Etwas weniger Padding für "schmaler"
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.celebration, color: Colors.white),
+                                SizedBox(width: 8),
+                                Text(
+                                  holidayName,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    final todoIndex = isHoliday ? index - 1 : index;
+                    final todo = todos[todoIndex];
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16.0,
@@ -151,7 +185,6 @@ class _KalenderState extends State<Kalender> {
                       ),
                     );
                   },
-                  // Hier kommen später deine To-Dos rein
                 ),
               ),
             ),
@@ -191,16 +224,7 @@ class _KalenderState extends State<Kalender> {
             ),
           ).then((newTodo) {
             if (newTodo != null && newTodo is ToDo) {
-              setState(() {
-                final dayKey = _normalizeDate(widget.selectedDate);
-                // 1. Prüfen, ob für diesen Tag schon eine Liste existiert.
-                if (allTodos[dayKey] == null) {
-                  // 2. Wenn nicht, erstelle eine neue, leere Liste.
-                  allTodos[dayKey] = [];
-                }
-                // 3. Füge das neue To-do zur Liste des Tages hinzu.
-                allTodos[dayKey]!.add(newTodo);
-              });
+              setState(() {});
             }
           });
         },

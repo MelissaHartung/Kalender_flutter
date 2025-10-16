@@ -17,7 +17,7 @@ class Headline extends StatelessWidget {
   Widget build(BuildContext context) {
     final String angezeigterText = DateFormat.yMMMMd(
       'de_DE',
-    ).format(DateTime.now());
+    ).format(selectedDate);
     return Column(
       children: [
         SizedBox(height: 20),
