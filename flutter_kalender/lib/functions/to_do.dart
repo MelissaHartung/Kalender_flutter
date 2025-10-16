@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 class ToDo {
   String title;
   bool isDone;
-  TimeOfDay? starttime; 
+  DateTime? starttime;
   Duration? duration;
 
-  ToDo({required this.title, this.isDone = false, this.starttime, this.duration});
+  ToDo({
+    required this.title,
+    this.isDone = false,
+    this.starttime,
+    this.duration,
+  });
 
   void toggleDone() {
     isDone = !isDone;
@@ -16,8 +21,8 @@ class ToDo {
     return {
       'title': title,
       'isDone': isDone,
-      'starttime': starttime != null ? {'hour': starttime!.hour, 'minute': starttime!.minute} : null,
-      'duration': duration?.inMinutes, 
+      'starttime': starttime?.toIso8601String(),
+      'duration': duration?.inMinutes,
     };
   }
 }

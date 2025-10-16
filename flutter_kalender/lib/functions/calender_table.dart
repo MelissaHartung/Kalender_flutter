@@ -32,7 +32,6 @@ class CalenderTable extends StatelessWidget {
           onTap: () {
             setDate(day);
             updateText(Feiertage.getHoliday(day));
-            Navigator.pushNamed(context, '/information_page');
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),

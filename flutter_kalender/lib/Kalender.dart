@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kalender/functions/add_todo_page.dart';
 import 'package:flutter_kalender/functions/headline.dart';
 import 'package:flutter_kalender/functions/calender_table.dart';
 import 'package:flutter_kalender/functions/to_do.dart';
+import 'package:intl/intl.dart';
 
 class Kalender extends StatefulWidget {
   final DateTime selectedDate;
@@ -24,13 +26,48 @@ class Kalender extends StatefulWidget {
 
 class _KalenderState extends State<Kalender> {
   var isDarkmode = false;
-List <ToDo> todos = [
-  ToDo(title: 'Beispiel To-Do 1'),
-  ToDo(title: 'Beispiel To-Do 2', isDone: true),
-  ToDo(title: 'Beispiel To-Do 3'),
-];
+  String buildSubtitle(ToDo todo) {
+    String text = '';
+    if (todo.starttime != null) {
+      // Formatiere die Zeit schön, z.B. '14:30 Uhr'
+      text += DateFormat('HH:mm').format(todo.starttime!) + ' Uhr';
+    }
+    if (todo.duration != null) {
+      // Füge die Dauer hinzu, z.B. ' (30 Min)'
+      text += ' (${todo.duration!.inMinutes} Min)';
+    }
+    return text;
+  }
+
+  Map<DateTime, List<ToDo>> allTodos = {};
+
+  // Hilfsfunktion, um die Uhrzeit von einem DateTime zu entfernen
+  DateTime _normalizeDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final dayKey = _normalizeDate(widget.selectedDate);
+    final List<ToDo> todosForSelectedDay = allTodos[dayKey] ?? [];
+
+    // Sortiere die Liste für den ausgewählten Tag
+    todosForSelectedDay.sort((a, b) {
+      // Fall 1: a hat keine Zeit, b aber schon -> b kommt zuerst
+      if (a.starttime == null && b.starttime != null) {
+        return 1; // 1 bedeutet "b kommt vor a"
+      }
+      // Fall 2: b hat keine Zeit, a aber schon -> a kommt zuerst
+      if (a.starttime != null && b.starttime == null) {
+        return -1; // -1 bedeutet "a kommt vor b"
+      }
+      // Fall 3: Beide haben eine Zeit -> Vergleiche sie direkt
+      if (a.starttime != null && b.starttime != null) {
+        return a.starttime!.compareTo(b.starttime!);
+      }
+      // Fall 4: Beide haben keine Zeit -> Ihre Reihenfolge ist egal
+      return 0;
+    });
     return Scaffold(
       backgroundColor: isDarkmode ? Colors.black : Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
@@ -76,32 +113,44 @@ List <ToDo> todos = [
                 ),
                 width: double
                     .infinity, // Sorgt dafür, dass der Container die volle Breite einnimmt
-                child: ListView(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                     
-                    ),
-                    ...todos.map((todo) => ListTile(
-                          title: Text(
-                            todo.title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              decoration: todo.isDone
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
+                child: ListView.builder(
+                  itemCount: todosForSelectedDay.length,
+                  itemBuilder: (context, index) {
+                    final todo = todosForSelectedDay[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 50,
+                            child: Text(
+                              todo.starttime != null
+                                  ? DateFormat('HH:mm').format(todo.starttime!)
+                                  : '',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
-                          trailing: Checkbox(
-                            value: todo.isDone,
-                            onChanged: (value) {
-                              setState(() {
-                                todo.toggleDone();
-                              });
-                            },
+                          // Hier kommt später die Zeitachsen-Grafik hin
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: Card(
+                              color: Colors.grey[900],
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  todo.title,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
                           ),
-                        )),
-                  ],
+                        ],
+                      ),
+                    );
+                  },
                   // Hier kommen später deine To-Dos rein
                 ),
               ),
@@ -130,22 +179,32 @@ List <ToDo> todos = [
             label: 'Info',
           ),
         ],
-
       ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 81, 168, 154),
-          child: Icon(Icons.add, color: Colors.white),
-          onPressed: () {
-            Navigator.pushNamed(context, '/add_todo_page').then((newTodo) {
-              if (newTodo != null && newTodo is ToDo) {
-                setState(() {
-                  todos.add(newTodo);
-                });
-              }
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(255, 81, 168, 154),
+        child: Icon(Icons.add, color: Colors.white),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddTodoPage(date: widget.selectedDate),
+            ),
+          ).then((newTodo) {
+            if (newTodo != null && newTodo is ToDo) {
+              setState(() {
+                final dayKey = _normalizeDate(widget.selectedDate);
+                // 1. Prüfen, ob für diesen Tag schon eine Liste existiert.
+                if (allTodos[dayKey] == null) {
+                  // 2. Wenn nicht, erstelle eine neue, leere Liste.
+                  allTodos[dayKey] = [];
+                }
+                // 3. Füge das neue To-do zur Liste des Tages hinzu.
+                allTodos[dayKey]!.add(newTodo);
+              });
             }
-            );
-          },
-        ),
+          });
+        },
+      ),
     );
   }
 }

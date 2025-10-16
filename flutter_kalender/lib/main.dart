@@ -59,8 +59,7 @@ class _MyAppState extends State<MyApp> {
         updateText: _updateText,
       )),
       routes: {
-        '/add_todo_page': (context) => AddTodoPage(
-        ),
+        '/add_todo_page': (context) => AddTodoPage(date: _selectedDate),
         '/information_page': (context) => InformationPage(
           selectedDate: _selectedDate,
           infoText: infoText,

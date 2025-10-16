@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_kalender/functions/to_do.dart';
 import 'package:intl/intl.dart';
 
 class AddTodoPage extends StatefulWidget {
-  const AddTodoPage({super.key});
+  final DateTime date;
+  const AddTodoPage({super.key, required this.date});
 
   @override
   State<AddTodoPage> createState() => _AddTodoPageState();
@@ -216,8 +218,27 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
             ElevatedButton(
               onPressed: () {
-                // Logic to add the to-do item
-                Navigator.pop(context);
+                final String todoTitle = _todoTitleController.text;
+                if (todoTitle.isNotEmpty) {
+                  DateTime? finalDateTime;
+                  if (_selectedTime != null) {
+                    final date = widget.date;
+                    final time = _selectedTime!;
+                    finalDateTime = DateTime(
+                      date.year,
+                      date.month,
+                      date.day,
+                      time.hour,
+                      time.minute,
+                    );
+                  }
+                  final newTodo = ToDo(
+                    title: todoTitle,
+                    starttime: finalDateTime,
+                    duration: _selectedDuration,
+                  );
+                  Navigator.pop(context, newTodo);
+                }
               },
               child: Text('Add To-Do'),
             ),
