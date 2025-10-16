@@ -23,7 +23,6 @@ class InformationPage extends StatefulWidget {
 }
 
 class _InformationPageState extends State<InformationPage> {
-  bool isDarkMode = false;
   bool isEditing = false;
   final TextEditingController _controller = TextEditingController();
   @override
@@ -41,24 +40,10 @@ class _InformationPageState extends State<InformationPage> {
       0,
     ).day;
     return Scaffold(
-      backgroundColor: isDarkMode
-          ? const Color.fromARGB(255, 0, 0, 0)
-          : const Color.fromARGB(143, 149, 141, 179),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 63, 59, 78),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isDarkMode = !isDarkMode;
-              });
-            },
-            icon: isDarkMode
-                ? Icon(Icons.light_mode_rounded)
-                : Icon(Icons.dark_mode_rounded),
-            color: Colors.white,
-          ),
-        ],
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Column(
@@ -82,9 +67,7 @@ class _InformationPageState extends State<InformationPage> {
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDarkMode
-                    ? const Color.fromARGB(172, 231, 189, 235)
-                    : const Color.fromARGB(172, 22, 21, 21),
+                color: const Color.fromARGB(172, 22, 21, 21),
                 border: Border.all(
                   color: const Color.fromARGB(255, 0, 0, 0),
                   width: 3,
@@ -93,10 +76,7 @@ class _InformationPageState extends State<InformationPage> {
               ),
               child: Text(
                 widget.infoText,
-                style: TextStyle(
-                  color: isDarkMode ? Colors.black : Colors.white,
-                  fontSize: 15,
-                ),
+                style: TextStyle(color: Colors.black, fontSize: 15),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -128,19 +108,17 @@ class _InformationPageState extends State<InformationPage> {
                           child: Container(
                             padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: isDarkMode
-                                  ? const Color.fromARGB(172, 231, 189, 235)
-                                  : const Color.fromARGB(172, 22, 21, 21),
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                                width: 3,
-                              ),
+                              color: const Color.fromARGB(255, 81, 168, 154),
+                              // border: Border.all(
+                              //   color: const Color.fromARGB(255, 54, 50, 50),
+                              //   width: 3,
+                              // ),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
                               '$jahr: $ergebniss',
                               style: TextStyle(
-                                color: isDarkMode ? Colors.black : Colors.white,
+                                color: const Color.fromARGB(255, 0, 0, 0),
                                 fontSize: 15,
                               ),
                               textAlign: TextAlign.center,
@@ -158,19 +136,17 @@ class _InformationPageState extends State<InformationPage> {
               padding: const EdgeInsets.all(12.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDarkMode
-                      ? const Color.fromARGB(172, 231, 189, 235)
-                      : const Color.fromARGB(172, 22, 21, 21),
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    width: 3,
-                  ),
+                  color: const Color.fromARGB(255, 81, 168, 154),
+                  // border: Border.all(
+                  //   color: const Color.fromARGB(255, 0, 0, 0),
+                  //   width: 3,
+                  // ),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 padding: EdgeInsets.all(10),
                 child: Text(
                   style: TextStyle(
-                    color: isDarkMode ? Colors.black : Colors.white,
+                    color: const Color.fromARGB(255, 0, 0, 0),
                     fontSize: 15,
                   ),
                   'Heute ist der $formatiertesDatum und der $wochentag $wochentagName im Monat $monatName. Es ist der $tagImJahr. Tag im Jahr ${widget.selectedDate.year}. Der Monat hat $lastDayOfMonth Tage.',

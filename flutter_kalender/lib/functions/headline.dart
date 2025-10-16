@@ -29,12 +29,44 @@ class Headline extends StatelessWidget {
                 icon: Icon(Icons.chevron_left, color: Colors.white, size: 40),
                 onPressed: onPreviousMonth,
               ),
-            Text(
-              angezeigterText,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                      height: 400,
+                      child: CalendarDatePicker(
+                        initialDate: selectedDate,
+                        firstDate: DateTime(selectedDate.year - 5),
+                        lastDate: DateTime(selectedDate.year + 5),
+                        onDateChanged: (newDate) {
+                          void Function(DateTime)? setDate;
+                          if (setDate != null) {
+                            setDate(newDate);
+                          }
+                          Navigator.pop(context);
+                        },
+                      ),
+                    );
+                  },
+                );
+                Text(
+                  'Heute ist der $angezeigterText',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                );
+              },
+              child: Text(
+                angezeigterText,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
             if (onNextMonth != null)
